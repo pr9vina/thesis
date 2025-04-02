@@ -35,11 +35,11 @@ Different types of networks are used to account for various structural patterns 
 ### Random network model
 The random network models considered in this study — Barabasi–Albert, Watts–Strogatz, and Erdos–Renyi. In these models, the network structure is formed independently of any node attributes, making them suitable for isolating the role of structure and other network features in estimation bias, as they reflect different structural assumptions:
 
-The *Barabási-Albert model* is well suited to simulating real-world systems that exhibit scale-free properties, such as friendship groups, high school social networks, or online platforms, where a small number of nodes tend to accumulate a disproportionately large number of connections \cite{bertotti2019configuration}. 
+The *Barabasi-Albert model* is well suited to simulating real-world systems that exhibit scale-free properties, such as friendship groups, high school social networks, or online platforms, where a small number of nodes tend to accumulate a disproportionately large number of connections \cite{bertotti2019configuration}. 
 
 The *Watts-Strogatz model* is generated to create small-world networks, characterized by high clustering and short average path lengths, features commonly observed in many social and biological systems. This model is useful for studying phenomena like information diffusion or community formation, as it captures the balance between local and global connectivity within a network \cite{song2014simple}.
 
-The *Erdős-Rényi model* generates random networks in which each possible edge between nodes has a fixed probability. This model is often used as a benchmark to understand how randomness alone can shape network structures and dynamics. While it lacks the clustering seen in the Watts-Strogatz model or the hubs in the Barabási-Albert model, it provides a baseline for comparison by modelling purely stochastic connections.
+The *Erdos-Renyi model* generates random networks in which each possible edge between nodes has a fixed probability. This model is often used as a benchmark to understand how randomness alone can shape network structures and dynamics. While it lacks the clustering seen in the Watts-Strogatz model or the hubs in the Barabási-Albert model, it provides a baseline for comparison by modelling purely stochastic connections.
 
 ### SBM
 In real-world networks, the structure of connections between nodes is often closely related to their observable characteristics. For example, people with similar features, such as age, gender, interests tend to form connections more frequently. It leads to covariates and network structure not beeing independent. This phenomenon is commonly reffered as homophily. 
@@ -91,7 +91,7 @@ To account for the bias that arises from network interference, network informati
 
 First, **network centrality** measures can be used, including:
     - *Degree centrality* — the number of direct connections a node has, representing its level of exposure or influence. 
-    
+
     - *Betweenness centrality* — how often a node lies on the shortest paths between other nodes, capturing its role as a bridge within the network.
 
 Second, **community membership** can be incorporated, identifying the subgroups or clusters to which nodes belong. This reflects the fact that individuals in the same group often have similar treatment or outcomes.
