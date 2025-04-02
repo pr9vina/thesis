@@ -8,6 +8,7 @@ from utils.logging_results import setup_logger
 from utils.saving_results import save_to_pickle
 from data_generation.data_simulator import IndividualDataSimulator
 from data_generation.network_generator import GraphGenerator, NetworkFeatureExtractor, StochasticBlockModel
+from data_generation.corrupt_network import make_corrupt_network
 from methods.visualization import ResultsPlotter
 from methods.methods_est import LinearRegressionEstimator
 from utils.warnings import validate_argument
@@ -41,6 +42,9 @@ def run_data_simulations(
     vec_window: int = None,
     min_count: int = None,
     batch_words: int = None,
+    corrupt_network: bool = False,
+    removal_prob: float = None,
+    addition_prob: float = None,
     save_data: bool = True
 ) -> Dict[str, Any]:
     """Function for data generation simulations
@@ -71,6 +75,10 @@ def run_data_simulations(
         vec_window (Optional[int], optional): Context window size for Node2Vec embeddings. Defaults to None.
         min_count (Optional[int], optional): Minimum word count for embeddings training. Defaults to None.
         batch_words (Optional[int], optional): Batch size for Node2Vec training. Defaults to None.
+        corrupt_network (bool, optional): Whether to corrupt network / add aditional noise, 
+            remove or add some edges with given probabilities. Defaults to False.
+        removal_prob (float, optional): probability of edge removal from the true network. Defaults to None.
+        addition_prob (float, optional): probability of addition new edge from the true network. Defeaults to None
         save_data (bool, optional): Whether to save the generated data to a file. Defaults to True.
 
     Returns:
@@ -136,9 +144,11 @@ def run_data_simulations(
                                 adj_matrix = graph_generator.generate_network(network_type)
                             else:
                                 adj_matrix, block_assignments = graph_generator.generate_network(covariates)
+                            if corrupt_network:
+                                adj_matrix = make_corrupt_network(adj_matrix=adj_matrix, removal_prob=removal_prob, addition_prob=addition_prob) 
 
                             group_assignment = individual_data_simulator.generate_group_assignment(
-                                covariates=covariates, 
+                                covariates=covariates,
                                 adj_matrix=adj_matrix
                             )
                             
@@ -202,7 +212,8 @@ def run_data_simulations(
                         }
                         
                         if save_data:
-                            filename = f"sim_{network_structure_type}_{assignment_type}_{network_type}_influence{influence}.pkl"
+                            corrupt_network_path = "corrupt_network" if corrupt_network else ""
+                            filename = f"sim_{network_structure_type}_{assignment_type}_{network_type}_influence{influence}_{corrupt_network_path}.pkl"
                             filepath = save_to_pickle(simulation_artifacts, filename)
                             param_summary["filename"] = filepath
                         

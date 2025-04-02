@@ -4,7 +4,6 @@ import networkx as nx
 from sklearn.cluster import KMeans
 from node2vec import Node2Vec
 import itertools
-from utils.warnings import validate_argument
 
 
 class GraphGenerator:

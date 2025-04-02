@@ -49,6 +49,10 @@ class NetworkSettings(BaseSettings):
                                             [0.1, 0.7, 0.1],
                                             [0.05, 0.1, 0.6]])
 
+    # Corrupt Network
+    addition_prob: float = 0.2
+    removal_prob: float = 0.3
+
 
 class DataGenerationSettings(BaseSettings):
     n_sim: int = 100
