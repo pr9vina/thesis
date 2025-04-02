@@ -8,10 +8,10 @@ All simulation parameters are summarized in Table 1.
 
 | Parameter              | Description                                                                                     |
 |------------------------|-------------------------------------------------------------------------------------------------|
-| **Network Models**     | Barabási–Albert, Watts–Strogatz, Erdős–Rényi; SBM with covariate-based blocks |
+| **Network Models**     | Barabasi–Albert, Watts–Strogatz, Erdos–Renyi; SBM with covariate-based blocks |
 |**Observations**| 10.000 nodes|
 | **Neighbor Influence** | Small (0.1), Medium (0.3), Large (0.7)        |
-| **Covariates**         | 2 features per node; each sampled from 𝒩(μ, σ²), with μ ∈ [3, 10] and σ ∈ [0.4, 0.8]             |
+| **Covariates**         | 2 features per node; each sampled from $N(\mu, \sigma)$, with $\mu$ ∈ [3, 10] and σ ∈ [0.4, 0.8]             |
 | **Treatment Effect**   | Medium (0.3)               |
 |**Group share**|  |
 | **Treatment Assignment** | Randomized or observational (based on individual and neighbor covariates)          |
@@ -64,7 +64,7 @@ To simulate outcomes in the presence of network interference, I use the Spatial 
 
 A key assumption of the SAR model is indirect interference: spillover effects from neighbors are proportional to the strength of the direct effect. In other words, if the treatment has no direct effect on a unit, here will be no spillovers to its neighbours. This assumption is integral to the linearity of the model and serves as a foundation for simulating outcomes in networks.
 
-Formally, the outcome can be expressed as: $y = (I - \rho W)^{-1} X\beta + (I - \rho W)^{-1} \epsilon$, where $\rho$ represents the influence of neighbors, $\W$ is the adjacency matrix capturing network connections, $X$ is a matrix of covariates, and $\epsilon$ represents independent noise. 
+Formally, the outcome can be expressed as: $y = (I - \rho W)^{-1} X\beta + (I - \rho W)^{-1} \epsilon$, where $\rho$ represents the influence of neighbors, $W$ is the adjacency matrix capturing network connections, $X$ is a matrix of covariates, and $\epsilon$ represents independent noise. 
 
 The coefficients $\beta$ are sampled from a normal distribution $N(3, 10)$, and the neighbour influence parameter $\rho$ will take on values corresponding to small (0.1), medium (0.3), and large (0.7) levels of spillover intensity. This allows to simulate different scenarios, enabling an understanding of how outcome dependencies affect estimation bias and the performance of network adjustment methods.
 
@@ -74,7 +74,7 @@ The coefficients $\beta$ are sampled from a normal distribution $N(3, 10)$, and 
 In this study, the estimand of interest is the Average Treatment Effect (ATE), defined as the average difference in potential outcomes between the treated and control groups. The ATE provides a measure of the impact of the treatment assignment in the population when SUTVA holds.
 
 ### Linear regression 
-In experimentational settings, as treatment is assigned randomly, to estimate effect I used the following linear regression: $$y = \beta_0 + \beta_1*Covariate_{i} + \beta_2*Group_{i} + \epsilon_{i}$$, where $Group_i$ indicates individuals' group and $Covariate_{i}$ individual covariates. The key expectation without interference is that the estimated treatment effect, represented by $\beta_2$ should align with the true effect used to generate the data when there is no bias. 
+In experimentational settings, as treatment is assigned randomly, to estimate effect I used the following linear regression: $y = \beta_0 + \beta_1*Covariate_{i} + \beta_2*Group_{i} + \epsilon_{i}$, where $Group_i$ indicates individuals' group and $Covariate_{i}$ individual covariates. The key expectation without interference is that the estimated treatment effect, represented by $\beta_2$ should align with the true effect used to generate the data when there is no bias. 
 
 ## Prospenity matching 
 In observational settings, treatment assignment is not randomized and can depend on observed and potentially unobserved covariates. This introduces confounding, which can bias estimation of the ATE. To address this, I apply Propensity Score Matching (PSM) — a widely used technique in these settings. 
@@ -90,7 +90,8 @@ This matching procedure reduces covariate imbalance between the treatment and co
 To account for the bias that arises from network interference, network information can be incorporated into estimation methods. In this way, the estimation can become more robust to network interference, providing more accurate estimates of treatment effect. One approach to account for network interference is to include network-aware covariates in the estimation method, such as linear regression. These covariates aim to adjust for structural characteristics that may confound the treatment effect.
 
 First, **network centrality** measures can be used, including:
-    - *Degree centrality* — the number of direct connections a node has, representing its level of exposure or influence.
+    - *Degree centrality* — the number of direct connections a node has, representing its level of exposure or influence. 
+    
     - *Betweenness centrality* — how often a node lies on the shortest paths between other nodes, capturing its role as a bridge within the network.
 
 Second, **community membership** can be incorporated, identifying the subgroups or clusters to which nodes belong. This reflects the fact that individuals in the same group often have similar treatment or outcomes.
@@ -129,7 +130,6 @@ Taken together, these results suggest that no single adjustment strategy is univ
 |                      | Node2Vec Embeddings                    | 42.0–45.0     | 44.6        | 45.0        | 38.7        |
 |                      | Treated Neighbors (Count)              | 89.3          | 33.0        | 96.3        | 138.6       |
 |                      | Treatment Exposure                     | 45.9          | 9.0         | 90.3        | 85.8        |
-
 | **Watts–Strogatz**   | Naive                                  | 100.0         | 95.8        | 122.3       | 73.6        |
 |                      | Degree + Betweenness                   | 11.3          | 11.3        | 3.0         | 2.1         |
 |                      | Degree + Betweenness + Community       | ~5.0          | 35.4        | 29.1        | 2.1         |
@@ -137,7 +137,6 @@ Taken together, these results suggest that no single adjustment strategy is univ
 |                      | Node2Vec Embeddings                    | 40.0–45.0     | 35.7        | 50.0        | 29.8        |
 |                      | Treated Neighbors (Count)              | 40.6          | 44.4        | 29.1        | 48.3        |
 |                      | Treatment Exposure                     | 29.8          | 22.5        | 22.5        | 28.8        |
-
 | **Erdős–Rényi**      | Naive                                  | 96.0          | 60.0        | 91.0        | 134.9       |
 |                      | Degree + Betweenness                   | 28.2          | 28.2        | 36.9        | 29.2        |
 |                      | Degree + Betweenness + Community       | ~27.0         | 28.2        | 35.8        | 29.4        |
